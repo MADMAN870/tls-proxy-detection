@@ -1,6 +1,6 @@
 # TLS Inspection Proxy
 
-Proxy mobile d'inspection TLS pour l'analyse du trafic HTTPS et la détection de fuites de données.
+Proxy d'inspection TLS pour l'analyse du trafic HTTPS et la détection de fuites de données.
 
 ```
 Mobile Device → Proxy (mitmproxy) → Analyzer → Alert System
@@ -133,7 +133,7 @@ docker compose --profile test run test-traffic
 
 - **[Documentation web](http://192.168.11.107:8000/docs)** — Documentation complète type Postman (tableau de bord, API, configuration, dépannage)
 - [Architecture](docs/architecture.md) — Conception système, flux de données, scoring
-- [Guide d'installation](docs/setup.md) — Authentification, configuration mobile, configuration
+- [Guide d'installation](docs/setup.md) — Authentification, configuration proxy, dépannage
 - [Guide d'utilisation](docs/usage.md) — Interface, API, limites de débit, motifs
 
 ## Configuration
