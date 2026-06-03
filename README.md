@@ -3,7 +3,7 @@
 Proxy d'inspection TLS pour l'analyse du trafic HTTPS et la détection de fuites de données.
 
 ```
-Mobile Device → Proxy (mitmproxy) → Analyzer → Alert System
+Browser → Proxy (mitmproxy) → Analyzer → Alert System
 ```
 
 ## Fonctionnalités
@@ -27,11 +27,8 @@ git clone <repo-url> tls-inspection-proxy
 cd tls-inspection-proxy
 docker compose up -d
 
-# Ouvrir le tableau de bord (depuis le serveur Docker)
+# Ouvrir le tableau de bord
 open http://localhost:8000
-
-# Depuis un appareil mobile, utiliser l'IP du serveur Docker
-open http://192.168.11.107:8000
 ```
 
 ## Configuration du Proxy
@@ -120,7 +117,7 @@ Tous les endpoints `/api/*` nécessiteront désormais un en-tête `X-API-Key`.
 | Service    | URL                     | Description                          |
 |------------|-------------------------|--------------------------------------|
 | Web UI     | http://localhost:8000   | Tableau de bord et visualisation     |
-| Proxy      | http://localhost:8082   | mitmproxy (configurer sur l'appareil)|
+| Proxy      | http://localhost:8082   | mitmproxy (configurer le navigateur)|
 | Site test  | http://localhost:9000   | Application de test LeakyBank        |
 
 ## Générer du trafic de test
