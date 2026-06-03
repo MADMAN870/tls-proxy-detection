@@ -1,0 +1,23 @@
+FROM mitmproxy/mitmproxy:10.4.2
+
+USER root
+RUN pip install --no-cache-dir httpx loguru pyyaml
+
+COPY proxy/addon.py /opt/tls-proxy/addon.py
+
+RUN mkdir -p /home/mitmproxy/.mitmproxy && \
+    openssl req -new -x509 -days 365 -nodes \
+      -subj "/CN=mitmproxy" \
+      -keyout /home/mitmproxy/.mitmproxy/mitmproxy-ca.pem \
+      -out /home/mitmproxy/.mitmproxy/mitmproxy-ca.pem 2>/dev/null; \
+    chown -R 10001:10001 /home/mitmproxy/.mitmproxy
+
+ENV HOME=/home/mitmproxy
+USER 10001
+WORKDIR /home/mitmproxy
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD python -c "import socket; s=socket.socket(); s.settimeout(3); s.connect(('localhost',8080)); s.close()" || exit 1
+
+ENTRYPOINT ["mitmdump"]
+CMD ["--listen-host", "0.0.0.0", "--listen-port", "8080", "--ssl-insecure", "-s", "/opt/tls-proxy/addon.py"]

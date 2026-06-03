@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Entities{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-white tracking-tight">Entities</h1>
+        <p class="text-sm text-gray-500 mt-1">Tracked hosts and their risk profiles</p>
+    </div>
+    <div class="text-sm text-gray-500 font-medium">{{ entities|length }} tracked sources</div>
+</div>
+<div class="card">
+    {% if entities %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-gray-600 text-xs font-semibold uppercase tracking-wider">
+                    <th class="text-left p-4">Host</th>
+                    <th class="text-left p-4">Requests</th>
+                    <th class="text-left p-4">Alerts</th>
+                    <th class="text-left p-4">Risk Score</th>
+                    <th class="text-left p-4">Last Seen</th>
+                    <th class="text-left p-4">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                <tr class="border-t border-gray-800/40 hover:bg-gray-800/20 transition-colors">
+                    <td class="p-4 font-mono text-xs text-gray-300">{{ entity.host }}</td>
+                    <td class="p-4 text-gray-300 font-mono text-sm">{{ entity.requests }}</td>
+                    <td class="p-4">
+                        <span class="{% if entity.alerts > 0 %}text-red-400{% else %}text-gray-600{% endif %} font-mono text-sm">{{ entity.alerts }}</span>
+                    </td>
+                    <td class="p-4">
+                        <span class="font-mono text-sm font-semibold text-gray-200">{{ "%.2f"|format(entity.risk) }}</span>
+                    </td>
+                    <td class="p-4 text-gray-500 text-xs font-mono">{{ entity.last_seen[:19] if entity.last_seen else "—" }}</td>
+                    <td class="p-4">
+                        {% if entity.risk >= 2.0 %}
+                        <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-red-950/60 text-red-300 border border-red-800/50">Suspicious</span>
+                        {% elif entity.risk > 0 %}
+                        <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-yellow-950/60 text-yellow-300 border border-yellow-800/50">Monitored</span>
+                        {% else %}
+                        <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-950/60 text-emerald-300 border border-emerald-800/50">Clean</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="p-12 text-center">
+        <svg class="w-14 h-14 mx-auto mb-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <p class="text-gray-400 font-medium">No entities tracked</p>
+        <p class="text-gray-600 text-sm mt-1">Entities will appear here as traffic is intercepted.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

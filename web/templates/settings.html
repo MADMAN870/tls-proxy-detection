@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-white tracking-tight">Settings</h1>
+        <p class="text-sm text-gray-500 mt-1">System configuration and management</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card p-5">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-lg bg-blue-500/20 border border-blue-500/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <h2 class="text-base font-semibold text-white">Proxy Configuration</h2>
+        </div>
+        <div class="space-y-3">
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">Listen Address</span>
+                <span class="text-gray-200 font-mono text-sm font-medium">0.0.0.0:8082</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">SSL Interception</span>
+                <span class="flex items-center gap-1.5 text-emerald-400 text-sm font-medium">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    Enabled
+                </span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">Upstream Verify</span>
+                <span class="text-gray-400 text-sm font-mono">Disabled (--ssl-insecure)</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">Mode</span>
+                <span class="text-gray-200 text-sm font-medium">Reverse / Transparent</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-5">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-lg bg-orange-500/20 border border-orange-500/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h2 class="text-base font-semibold text-white">Risk Thresholds</h2>
+        </div>
+        <div class="space-y-3">
+            {% for level, threshold, color in [('Low', '≥ 1.0', 'emerald'), ('Medium', '≥ 2.0', 'yellow'), ('High', '≥ 3.0', 'orange'), ('Critical', '≥ 5.0', 'red')] %}
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">{{ level }}</span>
+                <span class="text-{{ color }}-400 font-mono text-sm font-medium">{{ threshold }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card p-5">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-lg bg-purple-500/20 border border-purple-500/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+            </div>
+            <h2 class="text-base font-semibold text-white">Storage</h2>
+        </div>
+        <div class="space-y-3">
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">Alert Persistence</span>
+                <span class="text-gray-200 text-sm font-medium">In-Memory</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">Traffic Log</span>
+                <span class="text-gray-200 text-sm font-medium">In-Memory (200 max)</span>
+            </div>
+            <div class="flex justify-between items-center py-2.5 px-3 bg-gray-800/30 rounded-lg">
+                <span class="text-gray-400 text-sm">File Logging</span>
+                <span class="text-gray-200 text-sm font-medium font-mono">/data/alerts.log</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-5">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-lg bg-red-500/20 border border-red-500/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </div>
+            <h2 class="text-base font-semibold text-white">Actions</h2>
+        </div>
+        <div class="space-y-3">
+            <form method="POST" action="/settings/clear" class="contents">
+                <button class="w-full p-3 bg-red-500/10 text-red-300 rounded-lg hover:bg-red-500/20 text-sm font-medium transition-all duration-150 border border-red-500/20 hover:border-red-500/30 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    Clear All Data
+                </button>
+            </form>
+            <button onclick="location.reload()" class="w-full p-3 bg-gray-800/50 text-gray-300 rounded-lg hover:bg-gray-800 text-sm font-medium transition-all duration-150 border border-gray-700/30 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Restart Proxy Service
+            </button>
+        </div>
+    </div>
+
+    <div class="card p-5">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h2 class="text-base font-semibold text-white">Proxy Setup</h2>
+        </div>
+        <div class="space-y-3">
+            <div class="p-3 bg-gray-800/30 rounded-lg">
+                <p class="text-xs text-gray-400 mb-2 font-medium">1. Download the CA certificate:</p>
+                <a href="/ca.pem" class="block w-full p-3 bg-blue-500/10 text-blue-300 rounded-lg hover:bg-blue-500/20 text-sm font-medium transition-all duration-150 border border-blue-500/20 hover:border-blue-500/30 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Download mitmproxy-ca.pem
+                </a>
+            </div>
+            <div class="p-3 bg-gray-800/30 rounded-lg">
+                <p class="text-xs text-gray-400 mb-2 font-medium">2. Install the certificate as trusted:</p>
+                <ul class="text-xs text-gray-500 space-y-1.5 list-disc list-inside">
+                    <li><span class="text-gray-300">Chrome:</span> Settings → Privacy & Security → Security → Manage Certificates → Import → Trust for TLS</li>
+                    <li><span class="text-gray-300">Firefox:</span> Settings → Privacy & Security → Certificates → View Certificates → Import</li>
+                    <li><span class="text-gray-300">Linux:</span> <code class="text-gray-400">sudo cp mitmproxy-ca.pem /usr/local/share/ca-certificates/ &amp;&amp; sudo update-ca-certificates</code></li>
+                </ul>
+            </div>
+            <div class="p-3 bg-gray-800/30 rounded-lg">
+                <p class="text-xs text-gray-400 mb-2 font-medium">3. Configure your browser proxy:</p>
+                <ul class="text-xs text-gray-500 space-y-1.5 list-disc list-inside">
+                    <li>Set <span class="text-gray-300 font-mono">HTTP Proxy:</span> <code class="text-gray-300 font-mono">{{ request.client.host if request.client else "your-docker-ip" }}</code></li>
+                    <li>Set <span class="text-gray-300 font-mono">Port:</span> <code class="text-gray-300 font-mono">8082</code></li>
+                    <li>Enable <span class="text-gray-300 font-mono">Use proxy for HTTPS</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

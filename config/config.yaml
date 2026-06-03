@@ -1,0 +1,85 @@
+proxy:
+  listen_host: "0.0.0.0"
+  listen_port: 8080
+  upstream_cert: true
+  ssl_insecure: false
+
+analyzer:
+  enabled: true
+  max_content_length: 10485760
+
+patterns:
+  credit_card:
+    enabled: true
+    severity: 0.30
+    patterns:
+      - "\\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})\\b"
+  email:
+    enabled: true
+    severity: 0.10
+    patterns:
+      - "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b"
+  api_key:
+    enabled: true
+    severity: 0.25
+    patterns:
+      - "(?i)(?:api[-_]?key|apikey|secret[-_]?key|access[-_]?key)['\"]?\\s*[:=]\\s*['\"]?[A-Za-z0-9_\\-]{16,}['\"]?"
+      - "(?i)bearer\\s+[A-Za-z0-9_\\-=]{20,}"
+  password:
+    enabled: true
+    severity: 0.25
+    patterns:
+      - "(?i)(?:password|passwd|pwd)['\"]?\\s*[:=]\\s*['\"]?[^'\"\\s]{4,}['\"]?"
+  jwt:
+    enabled: true
+    severity: 0.20
+    patterns:
+      - "eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+"
+  ssn:
+    enabled: true
+    severity: 0.30
+    patterns:
+      - "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+
+risk_scoring:
+  thresholds:
+    low: 1.0
+    medium: 2.0
+    high: 3.0
+
+suspicious:
+  extensions:
+    - ".exe"
+    - ".dll"
+    - ".bat"
+    - ".vbs"
+    - ".ps1"
+    - ".scr"
+    - ".zip"
+    - ".rar"
+    - ".7z"
+    - ".docm"
+    - ".xlsm"
+  domains:
+    - "pastebin"
+    - "ghostbin"
+    - "hastebin"
+    - "tor2web"
+    - "onion"
+    - "i2p"
+  high_volume_threshold: 5242880
+
+alerts:
+  console: true
+  file: true
+  file_path: "/data/alerts.log"
+  db_path: "/data/alerts.db"
+
+auth:
+  enabled: false
+  api_key: "${API_KEY:-}"
+  rate_limit: 100
+
+server:
+  host: "0.0.0.0"
+  port: 8000

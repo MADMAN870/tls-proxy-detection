@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-white tracking-tight">About</h1>
+        <p class="text-sm text-gray-500 mt-1">TLS Inspection Proxy information</p>
+    </div>
+</div>
+
+<div class="card p-6 max-w-2xl">
+    <div class="flex items-center gap-4 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/30">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold text-white">TLS Inspection Proxy</h2>
+            <p class="text-sm text-gray-400">Version 1.0.0</p>
+        </div>
+    </div>
+    <div class="space-y-4 text-sm text-gray-300 leading-relaxed">
+        <p>Enterprise-grade TLS inspection proxy for analyzing HTTPS traffic and detecting sensitive data leaks in real-time.</p>
+        <div class="bg-gray-950 rounded-xl p-5 space-y-3 border border-gray-800/40">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500">Architecture</span>
+                <span class="text-gray-200 font-medium">mitmproxy → FastAPI → Analyzer → Alerts</span>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-gray-800/40">
+                <span class="text-gray-500">Detection Patterns</span>
+                <span class="text-gray-200 font-medium">10 regex rules</span>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-gray-800/40">
+                <span class="text-gray-500">Risk Levels</span>
+                <span class="text-gray-200 font-medium">Low / Medium / High / Critical</span>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-gray-800/40">
+                <span class="text-gray-500">Storage</span>
+                <span class="text-gray-200 font-medium">In-memory (no DB required)</span>
+            </div>
+        </div>
+        <p class="text-gray-600 text-xs pt-2">Built with mitmproxy, FastAPI, Python 3.12, Docker, and Tailwind CSS.</p>
+    </div>
+</div>
+{% endblock %}

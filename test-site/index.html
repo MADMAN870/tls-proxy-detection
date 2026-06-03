@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LeakyBank - Test Site</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto space-y-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h1 class="text-2xl font-bold text-red-600">LeakyBank</h1>
+            <p class="text-gray-500 text-sm">Test website for TLS Inspection Proxy — all data is fake</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Login</h2>
+            <form id="loginForm" class="space-y-3">
+                <input name="email" placeholder="Email" class="w-full border rounded px-3 py-2" value="admin@leakybank.com">
+                <input name="password" type="password" placeholder="Password" class="w-full border rounded px-3 py-2" value="P@ssw0rd!">
+                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Login</button>
+            </form>
+            <pre id="loginResult" class="mt-2 text-xs"></pre>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Payment</h2>
+            <form id="paymentForm" class="space-y-3">
+                <input name="cardholder" placeholder="Cardholder Name" class="w-full border rounded px-3 py-2" value="John Doe">
+                <input name="card_number" placeholder="Card Number" class="w-full border rounded px-3 py-2" value="4111111111111111">
+                <input name="expiry" placeholder="MM/YY" class="w-full border rounded px-3 py-2" value="12/28">
+                <input name="cvv" placeholder="CVV" class="w-full border rounded px-3 py-2" value="123">
+                <input name="ssn" placeholder="SSN" class="w-full border rounded px-3 py-2" value="987-65-4321">
+                <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Pay $999.99</button>
+            </form>
+            <pre id="paymentResult" class="mt-2 text-xs"></pre>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">API Key Leak</h2>
+            <button id="leakBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Simulate API Key Leak</button>
+            <pre id="leakResult" class="mt-2 text-xs"></pre>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Exfiltrate Data</h2>
+            <button id="exfilBtn" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Send Data to Suspicious Domain</button>
+            <pre id="exfilResult" class="mt-2 text-xs"></pre>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">All Test Actions</h2>
+            <div class="space-x-2">
+                <button onclick="sendAll()" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">Trigger All Leaks</button>
+                <span class="text-sm text-gray-500">Then check dashboard →</span>
+                <a href="http://localhost:8000" target="_blank" class="text-blue-600 hover:underline text-sm">Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = window.location.origin;
+
+        async function postJSON(url, data) {
+            const r = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+            return r.json();
+        }
+
+        function show(el, data) {
+            document.getElementById(el).textContent = JSON.stringify(data, null, 2);
+        }
+
+        function fail(el, err) {
+            document.getElementById(el).textContent = 'Error: ' + err.message;
+        }
+
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
+            try { show('loginResult', await postJSON(API + '/api/login', data)); }
+            catch (err) { fail('loginResult', err); }
+        };
+
+        document.getElementById('paymentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
+            try { show('paymentResult', await postJSON(API + '/api/payment', data)); }
+            catch (err) { fail('paymentResult', err); }
+        };
+
+        document.getElementById('leakBtn').onclick = async () => {
+            const data = { user: 'admin', api_key: 'sk-live-AABBCCDDEEFFGGHHIIJJKKLLMM', secret: 'supersecret' };
+            try { show('leakResult', await postJSON(API + '/api/leak', data)); }
+            catch (err) { fail('leakResult', err); }
+        };
+
+        document.getElementById('exfilBtn').onclick = async () => {
+            const data = { customers: [{name: 'John Doe', ssn: '123-45-6789', cc: '5555555555554444'}], password: 'export123' };
+            try { show('exfilResult', await postJSON(API + '/api/leak', data)); }
+            catch (err) { fail('exfilResult', err); }
+        };
+
+        async function sendAll() {
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            setTimeout(() => document.getElementById('paymentForm').dispatchEvent(new Event('submit')), 500);
+            setTimeout(() => document.getElementById('leakBtn').click(), 1000);
+            setTimeout(() => document.getElementById('exfilBtn').click(), 1500);
+        }
+    </script>
+</body>
+</html>
